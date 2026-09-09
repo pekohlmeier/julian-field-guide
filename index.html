@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Oaks Are Turning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..800,24..40,1;1,9..144,400..700,24..40,1&family=Archivo:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --ground:#EDEBE1;--surface:#F7F5ED;--ink:#221B13;--muted:#4C4235;--muted2:#736958;
+  --rule:#D3CFBD;--gold:#B37A12;--russet:#8E3B1B;--lichen:#5E6B49;
+  --shadow:0 1px 2px rgba(34,27,19,.06),0 10px 30px rgba(34,27,19,.07);
+  --lift:0 6px 14px rgba(34,27,19,.10),0 18px 44px rgba(34,27,19,.12);
+  --ridge1:#5E6B49;--ridge2:#4C4235;--ridge3:#221B13;--sun:#E7B85C;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#15120E;--surface:#1E1A14;--ink:#F1ECE1;--muted:#CBC2B2;--muted2:#9C927F;
+  --rule:#372F25;--gold:#E0A63C;--russet:#CC6B3E;--lichen:#93A075;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 14px 34px rgba(0,0,0,.45);
+  --lift:0 6px 14px rgba(0,0,0,.5),0 22px 50px rgba(0,0,0,.55);
+  --ridge1:#2C3324;--ridge2:#211C15;--ridge3:#15120E;--sun:#C4832B;
+}}
+:root[data-theme="dark"]{
+  --ground:#15120E;--surface:#1E1A14;--ink:#F1ECE1;--muted:#CBC2B2;--muted2:#9C927F;
+  --rule:#372F25;--gold:#E0A63C;--russet:#CC6B3E;--lichen:#93A075;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 14px 34px rgba(0,0,0,.45);
+  --lift:0 6px 14px rgba(0,0,0,.5),0 22px 50px rgba(0,0,0,.55);
+  --ridge1:#2C3324;--ridge2:#211C15;--ridge3:#15120E;--sun:#C4832B;
+}
+*{box-sizing:border-box}
+body{margin:0;padding:0;background:var(--ground);color:var(--ink);font-family:Archivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--russet);text-decoration:none;border-bottom:1px solid var(--rule)}
+a:hover{color:var(--gold);border-bottom-color:var(--gold)}
+button{font-family:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+h1,h2,h3{font-family:Fraunces,"Iowan Old Style",Georgia,serif;margin:0;text-wrap:balance}
+p{margin:0}
+.mono{font-family:'DM Mono',ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
+.wrap{max-width:1080px;margin:0 auto}
+.eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--lichen)}
+
+@keyframes bloom{from{opacity:0;transform:translateY(70px) scale(.82)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes ridgeup{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+@keyframes tossin{0%{transform:translate(150px,-130px) rotate(0deg) scale(.6);opacity:0}12%{opacity:1}62%{transform:translate(4px,2px) rotate(420deg) scale(1)}78%{transform:translate(0,-14px) rotate(470deg) scale(.98)}100%{transform:translate(0,4px) rotate(500deg) scale(.9);opacity:0}}
+@keyframes bubblepop{0%{transform:translateY(6px) scale(.7);opacity:0}22%{transform:translateY(0) scale(1.04);opacity:1}75%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-6px) scale(.98);opacity:0}}
+@keyframes nudge{0%,100%{transform:translateY(0) rotate(0)}45%{transform:translateY(-5px) rotate(-1.6deg)}70%{transform:translateY(1px) rotate(.8deg)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+#leaves{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+
+header.bar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;background:color-mix(in oklab,var(--ground) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}
+.bar-l{display:flex;align-items:baseline;gap:8px;min-width:0}
+.bar-l .k{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--lichen)}
+.bar-l .t{font-family:Fraunces,serif;font-variation-settings:'WONK' 1,'SOFT' 30;font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tbtn{flex:none;padding:6px 10px;border:1px solid var(--rule);border-radius:999px;background:var(--surface);color:var(--muted);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+.tbtn:hover{border-color:var(--gold);color:var(--gold)}
+
+.hero{position:relative;z-index:1;overflow:hidden;padding:44px 20px 0;background:linear-gradient(to bottom,var(--ground),var(--surface))}
+.sunblob{position:absolute;left:50%;bottom:120px;width:min(150vw,760px);aspect-ratio:1;transform:translateX(-50%);background:radial-gradient(circle at 50% 60%,color-mix(in oklab,var(--sun) 72%,transparent),transparent 62%);animation:bloom 1900ms cubic-bezier(.16,.8,.24,1) both;pointer-events:none}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border:1px solid var(--rule);border-radius:999px;background:color-mix(in oklab,var(--surface) 70%,transparent);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.04em;color:var(--muted)}
+.pill i{width:6px;height:6px;border-radius:50%;background:var(--gold);display:block}
+h1{margin:16px 0 0;font-variation-settings:'WONK' 1,'SOFT' 36;font-weight:700;font-size:clamp(44px,13vw,104px);line-height:.94;letter-spacing:-.025em}
+h1 em{font-style:italic;color:var(--russet);font-variation-settings:'WONK' 1,'SOFT' 40}
+.lede{max-width:660px;margin:20px 0 0;font-size:clamp(16px,4.3vw,19px);line-height:1.55;color:var(--muted);text-wrap:pretty}
+.chipsrow{display:flex;flex-wrap:wrap;gap:8px 10px;margin-top:22px;font-family:'DM Mono',monospace;font-size:11.5px;font-variant-numeric:tabular-nums;color:var(--muted2)}
+.chipsrow span{padding:4px 9px;border:1px solid var(--rule);border-radius:6px;background:var(--surface)}
+.chipsrow span.code{border-color:var(--gold);background:color-mix(in oklab,var(--gold) 12%,var(--surface));color:var(--gold);letter-spacing:.08em}
+.cdbox{margin:30px 0 0;padding:16px;border:1px solid var(--rule);border-radius:14px;background:color-mix(in oklab,var(--surface) 86%,transparent);box-shadow:var(--shadow)}
+.cdgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.cdgrid b{display:block;font-family:'DM Mono',monospace;font-weight:500;font-size:clamp(26px,8vw,40px);line-height:1;font-variant-numeric:tabular-nums;color:var(--ink)}
+.cdgrid .s b{color:var(--gold)}
+.cdgrid small{display:block;margin-top:5px;font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2)}
+.ridge{position:relative;margin:26px -20px 0;height:clamp(170px,38vw,280px)}
+.ridge svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+main{position:relative;z-index:1;background:var(--surface)}
+section{max-width:1080px;margin:0 auto;padding:40px 20px 8px}
+.sechead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-bottom:12px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.sechead h2{margin:0;font-variation-settings:'WONK' 1,'SOFT' 28;font-weight:600;font-size:clamp(22px,6vw,30px);letter-spacing:-.01em}
+.sechead span{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2)}
+.grid{display:grid;gap:14px;margin-top:16px}
+.g282{grid-template-columns:repeat(auto-fit,minmax(min(100%,282px),1fr))}
+.g268{grid-template-columns:repeat(auto-fit,minmax(min(100%,268px),1fr))}
+.g300{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.g220{grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
+.card{padding:18px;border:1px solid var(--rule);border-radius:14px;background:var(--ground);box-shadow:var(--shadow)}
+
+/* dogs */
+.dog{position:relative;overflow:hidden}
+.dogtop{display:flex;align-items:center;gap:15px}
+.avwrap{position:relative;flex:none;width:104px;height:104px}
+.avwrap img{width:104px;height:104px;border-radius:50%;object-fit:cover;display:block}
+.avwrap img.e{border:2px solid var(--gold)}
+.avwrap img.l{border:2px solid var(--lichen)}
+.dog h3{margin:0;font-variation-settings:'WONK' 1,'SOFT' 28;font-weight:600;font-size:22px;line-height:1.1}
+.dog .breed{margin-top:4px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--lichen)}
+.dog p{margin:7px 0 0;font-size:14px;line-height:1.45;color:var(--muted)}
+.dogact{display:flex;align-items:center;gap:10px;margin-top:14px;min-height:44px}
+.dogbtn{padding:11px 16px;min-height:44px;border-radius:999px;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.06em;cursor:pointer}
+.dogbtn.e{border:1px solid var(--gold);background:color-mix(in oklab,var(--gold) 14%,transparent);color:var(--gold)}
+.dogbtn.e:hover{background:var(--gold);color:#1A1206}
+.dogbtn.l{border:1px solid var(--lichen);background:color-mix(in oklab,var(--lichen) 16%,transparent);color:var(--lichen)}
+.dogbtn.l:hover{background:var(--lichen);color:var(--ground)}
+.say{font-family:Fraunces,serif;font-variation-settings:'WONK' 1,'SOFT' 34;font-style:italic;font-weight:700;font-size:22px;animation:bubblepop 1100ms 420ms cubic-bezier(.16,.8,.24,1) both}
+.say.e{color:var(--russet)}
+.say.l{color:var(--lichen)}
+.ball{position:absolute;right:-6px;top:34px;width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 34% 30%,var(--russet),#5E2410);box-shadow:inset -3px -4px 6px rgba(0,0,0,.35);animation:tossin 900ms cubic-bezier(.3,.7,.4,1) both}
+.treat{position:absolute;right:-4px;top:38px;width:30px;height:17px;border-radius:9px;background:linear-gradient(160deg,#C08A3E,#7A4C16);box-shadow:inset -2px -3px 5px rgba(0,0,0,.3);animation:tossin 900ms cubic-bezier(.3,.7,.4,1) both}
+
+/* day cards */
+.day .date{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.day h3{margin:8px 0 0;font-variation-settings:'WONK' 1,'SOFT' 26;font-weight:600;font-size:21px;line-height:1.15}
+.day .note{margin:8px 0 0;font-size:14px;line-height:1.5;color:var(--muted2)}
+.day ul{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
+.day li{display:grid;grid-template-columns:62px 1fr;gap:10px;align-items:baseline;padding-top:10px;border-top:1px solid var(--rule)}
+.day li .t{font-family:'DM Mono',monospace;font-size:12px;font-variant-numeric:tabular-nums;color:var(--russet)}
+.day li .w{font-size:14.5px;line-height:1.45;color:var(--ink)}
+
+/* getting in */
+.ref{border:1px solid var(--rule);border-radius:16px;background:var(--ground);box-shadow:var(--shadow);overflow:hidden}
+.refhead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:16px 18px;background:color-mix(in oklab,var(--lichen) 14%,var(--ground));border-bottom:1px solid var(--rule)}
+.refhead h2{margin:0;font-variation-settings:'WONK' 1,'SOFT' 28;font-weight:600;font-size:clamp(21px,5.6vw,27px)}
+.refhead span{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--lichen)}
+.refbody{padding:18px}
+.label{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2)}
+blockquote{margin:12px 0 0;padding:0 0 0 14px;border-left:2px solid var(--gold);font-size:16px;line-height:1.62;color:var(--ink);max-width:660px}
+blockquote strong{font-weight:600;color:var(--russet)}
+blockquote em{font-style:italic;color:var(--muted2)}
+.shot{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:16px;padding:12px 14px;border:1px dashed var(--russet);border-radius:12px;background:color-mix(in oklab,var(--russet) 8%,transparent)}
+.shot b{font-family:Fraunces,serif;font-variation-settings:'WONK' 1,'SOFT' 26;font-weight:600;font-size:16px;color:var(--russet)}
+.shot span{font-size:14px;line-height:1.45;color:var(--muted)}
+.refgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px;margin-top:18px;padding-top:18px;border-top:1px solid var(--rule)}
+.refgrid .big{margin-top:6px;font-family:Fraunces,serif;font-variation-settings:'WONK' 1,'SOFT' 26;font-weight:600;font-size:19px}
+.refgrid p{margin:6px 0 0;font-size:14.5px;line-height:1.5;color:var(--muted)}
+.refgrid p.m{font-family:'DM Mono',monospace;font-size:14px;font-variant-numeric:tabular-nums}
+.refgrid p.s{font-size:14px;color:var(--muted2)}
+
+/* deadlines */
+.dls{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));margin-top:14px;border:1px solid var(--rule);border-radius:12px;overflow:hidden;background:var(--ground)}
+.dls div{padding:14px 16px;border-bottom:1px solid var(--rule)}
+.dls b{display:block;font-family:'DM Mono',monospace;font-weight:500;font-size:15px;font-variant-numeric:tabular-nums}
+.dls span{display:block;margin-top:5px;font-size:14px;line-height:1.4;color:var(--muted)}
+
+/* filters + activities */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.fchip{padding:7px 13px;border-radius:999px;cursor:pointer;font-family:'DM Mono',monospace;font-size:11.5px;letter-spacing:.03em;border:1px solid var(--rule);background:var(--ground);color:var(--muted)}
+.fchip:hover{border-color:var(--gold)}
+.fchip[aria-pressed="true"]{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+.act{display:flex;flex-direction:column;padding:18px;border-radius:14px;background:var(--ground);border:1px solid var(--rule);box-shadow:var(--shadow);transition:transform 220ms cubic-bezier(.16,.8,.24,1),box-shadow 220ms}
+.act:hover{transform:translateY(-3px);box-shadow:var(--lift)}
+.act.rec{border-color:var(--gold)}
+.act.on{border-color:var(--lichen)}
+.acttop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.act h3{margin:0;font-variation-settings:'WONK' 1,'SOFT' 26;font-weight:600;font-size:20px;line-height:1.15}
+.tagpick{flex:none;padding:4px 8px;border-radius:999px;background:var(--gold);color:#1A1206;font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase}
+.act .meta{margin-top:9px;font-family:'DM Mono',monospace;font-size:11.5px;font-variant-numeric:tabular-nums;color:var(--lichen)}
+.act .body{margin:10px 0 0;font-size:14.5px;line-height:1.55;color:var(--muted)}
+.act .warn{margin-top:10px;padding:8px 10px;border-radius:9px;background:color-mix(in oklab,var(--russet) 10%,transparent);font-size:13.5px;line-height:1.45;color:var(--russet)}
+.actfoot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:14px}
+.actfoot .tl{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2)}
+.addbtn{flex:none;padding:8px 14px;border-radius:999px;cursor:pointer;font-family:'DM Mono',monospace;font-size:11.5px;letter-spacing:.06em;border:1px solid var(--rule);background:transparent;color:var(--ink)}
+.addbtn:hover{border-color:var(--gold)}
+.act.on .addbtn{background:var(--lichen);color:var(--ground);border-color:var(--lichen)}
+
+/* restaurants */
+.rlist{margin-top:18px;border:1px solid var(--rule);border-radius:14px;background:var(--ground);overflow:hidden}
+.rrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:6px 16px;padding:16px 18px;border-bottom:1px solid var(--rule)}
+.rrow:last-child{border-bottom:0}
+.rname{font-family:Fraunces,serif;font-variation-settings:'WONK' 1,'SOFT' 26;font-weight:600;font-size:19px}
+.rnote{margin-top:5px;font-size:14px;line-height:1.5;color:var(--muted2)}
+.rk{font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2)}
+.rv{margin-top:4px;font-size:13.5px;line-height:1.4}
+.rv.m{font-family:'DM Mono',monospace;font-variant-numeric:tabular-nums;color:var(--ink)}
+.rv.d{color:var(--lichen)}
+.rv.b{color:var(--muted)}
+.rph{margin-top:2px;font-family:'DM Mono',monospace;font-size:13.5px;font-variant-numeric:tabular-nums;color:var(--russet)}
+
+/* chefs */
+.chef{padding:16px;border-radius:13px;background:var(--ground);border:1px solid var(--rule);box-shadow:var(--shadow)}
+.chef.win{border-color:var(--gold)}
+.cheftop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.chefname{font-family:Fraunces,serif;font-variation-settings:'WONK' 1,'SOFT' 26;font-weight:600;font-size:18px;line-height:1.2;color:var(--muted2)}
+.chef.win .chefname{color:var(--ink)}
+.chefrate{flex:none;font-family:'DM Mono',monospace;font-size:12px;font-variant-numeric:tabular-nums;color:var(--muted2)}
+.chefnums{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px;margin-top:12px}
+.chefnums .r{margin-left:auto;text-align:right}
+.chefnums .v{margin-top:3px;font-family:'DM Mono',monospace;font-size:13.5px;font-variant-numeric:tabular-nums;color:var(--muted)}
+.chefnums .real{margin-top:3px;font-family:'DM Mono',monospace;font-weight:500;font-size:19px;font-variant-numeric:tabular-nums;color:var(--russet)}
+.chef.win .real{color:var(--gold)}
+.chefv{margin-top:10px;font-size:13.5px;line-height:1.45;color:var(--muted2)}
+.chef.win .chefv{color:var(--ink)}
+.warnbox{margin-top:22px;padding:18px;border-radius:14px;background:color-mix(in oklab,var(--russet) 12%,var(--ground));border:1px solid var(--russet)}
+.warnbox h3{margin:0;font-variation-settings:'WONK' 1,'SOFT' 28;font-weight:600;font-size:20px;color:var(--russet)}
+.warnbox p{max-width:660px;margin:9px 0 0;font-size:15px;line-height:1.55;color:var(--ink)}
+
+/* figures */
+.fig{padding:18px;border-top:2px solid var(--gold);background:var(--ground)}
+.fig .big{font-family:'DM Mono',monospace;font-weight:500;font-size:clamp(28px,8vw,38px);line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.fig .lab{margin-top:8px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--lichen)}
+.fig p{margin:8px 0 0;font-size:14.5px;line-height:1.5;color:var(--muted)}
+
+/* packing */
+figure{margin:16px 0 0}
+figure img{width:100%;max-width:660px;height:auto;border-radius:14px;display:block;border:1px solid var(--rule)}
+figcaption{margin:8px 0 0;font-family:'DM Mono',monospace;font-size:11.5px;color:var(--muted2)}
+.packgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:8px;margin-top:14px}
+.pk{display:flex;align-items:center;gap:11px;padding:13px 14px;border-radius:11px;text-align:left;cursor:pointer;font-family:Archivo,sans-serif;font-size:14.5px;line-height:1.4;min-height:48px;border:1px solid var(--rule);background:var(--ground);color:var(--ink)}
+.pk:hover{border-color:var(--gold)}
+.pk .box{flex:none;width:18px;height:18px;border-radius:5px;display:grid;place-items:center;font-family:'DM Mono',monospace;font-size:11px;border:1px solid var(--rule);background:transparent;color:transparent}
+.pk.on{border-color:var(--lichen);background:color-mix(in oklab,var(--lichen) 14%,var(--ground));color:var(--muted2)}
+.pk.on .box{border-color:var(--lichen);background:var(--lichen);color:var(--ground)}
+
+footer{background:var(--ground);border-top:1px solid var(--rule)}
+footer .in{max-width:1080px;margin:0 auto;padding:34px 20px 120px}
+footer .names{font-family:Fraunces,serif;font-variation-settings:'WONK' 1,'SOFT' 30;font-weight:600;font-size:clamp(22px,6vw,28px)}
+footer .meta{margin:14px 0 0;font-family:'DM Mono',monospace;font-size:12.5px;line-height:1.7;font-variant-numeric:tabular-nums;color:var(--muted2)}
+footer .fine{max-width:660px;margin:14px 0 0;font-size:14.5px;line-height:1.55;color:var(--muted)}
+
+.tray{position:fixed;left:0;right:0;bottom:0;z-index:30;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:color-mix(in oklab,var(--ground) 92%,transparent);backdrop-filter:blur(12px);border-top:1px solid var(--rule);transform:translateY(120%);transition:transform 380ms cubic-bezier(.16,.8,.24,1)}
+.tray.up{transform:none}
+.trayin{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.trayin .c{min-width:0;flex:1}
+.trayin .k{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--lichen)}
+.trayin .n{margin-top:3px;font-size:14px;line-height:1.35;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.clr{flex:none;padding:10px 14px;min-height:44px;border:1px solid var(--rule);border-radius:999px;background:var(--surface);color:var(--muted);font-family:'DM Mono',monospace;font-size:11.5px;letter-spacing:.06em;cursor:pointer}
+.clr:hover{border-color:var(--russet);color:var(--russet)}
+</style>
+</head>
+<body>
+<canvas id="leaves" aria-hidden="true"></canvas>
+
+<header class="bar">
+  <div class="bar-l">
+    <span class="k">Nov 6&ndash;8</span>
+    <span class="t">The oaks are turning</span>
+  </div>
+  <button class="tbtn" id="theme">Auto</button>
+</header>
+
+<section class="hero">
+  <div class="sunblob"></div>
+  <div class="wrap" style="position:relative">
+    <div class="pill"><i></i>Julian, California &middot; Nov 6&ndash;8, 2026</div>
+    <h1>The oaks are<br><em>turning</em></h1>
+    <p class="lede">Two nights on two fenced acres for Paul, Morgan, Elwood and Ellie &mdash; timed, as it happens, to the exact week San Diego County&rsquo;s black oaks go gold.</p>
+    <div class="chipsrow">
+      <span>Kentwood-in-the-Pines</span>
+      <span>Check-in 4:00 PM</span>
+      <span>Sunset 4:45 PM</span>
+      <span>69&deg; / 50&deg;F</span>
+    </div>
+    <div class="cdbox">
+      <div class="eyebrow">Until the keypad</div>
+      <div class="cdgrid">
+        <div><b id="cd">&mdash;</b><small>days</small></div>
+        <div><b id="ch">&mdash;</b><small>hours</small></div>
+        <div><b id="cm">&mdash;</b><small>min</small></div>
+        <div class="s"><b id="cs">&mdash;</b><small>sec</small></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ridge">
+    <svg viewBox="0 0 1200 300" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <pattern id="firsFar" width="26" height="22" patternUnits="userSpaceOnUse"><path d="M13 2 L23 22 L3 22 Z" fill="var(--ridge3)" opacity=".22"></path></pattern>
+        <pattern id="firsMid" width="22" height="20" patternUnits="userSpaceOnUse"><path d="M11 0 L21 20 L1 20 Z" fill="var(--ridge3)" opacity=".34"></path></pattern>
+        <pattern id="crest" width="24" height="26" patternUnits="userSpaceOnUse"><path d="M12 0 L23 26 L1 26 Z" fill="var(--ridge3)"></path></pattern>
+        <clipPath id="clipFar"><path d="M0 210 C90 168 170 200 250 186 C330 172 372 132 456 148 C540 164 596 132 686 148 C776 164 848 128 940 152 C1032 176 1112 158 1200 178 L1200 300 L0 300 Z"></path></clipPath>
+        <clipPath id="clipMid"><path d="M0 244 C96 212 178 246 262 232 C346 218 404 190 492 206 C580 222 646 196 738 214 C830 232 906 202 1000 220 C1094 238 1150 232 1200 224 L1200 300 L0 300 Z"></path></clipPath>
+      </defs>
+      <circle cx="880" cy="120" r="86" fill="var(--sun)" opacity=".22"></circle>
+      <circle cx="880" cy="120" r="46" fill="var(--sun)" opacity=".85" style="animation:bloom 1800ms cubic-bezier(.16,.8,.24,1) both"></circle>
+      <g style="animation:ridgeup 1200ms 120ms cubic-bezier(.16,.8,.24,1) both">
+        <path d="M0 210 C90 168 170 200 250 186 C330 172 372 132 456 148 C540 164 596 132 686 148 C776 164 848 128 940 152 C1032 176 1112 158 1200 178 L1200 300 L0 300 Z" fill="var(--ridge1)" opacity=".5"></path>
+        <g clip-path="url(#clipFar)"><rect x="0" y="120" width="1200" height="180" fill="url(#firsFar)"></rect></g>
+      </g>
+      <g style="animation:ridgeup 1200ms 260ms cubic-bezier(.16,.8,.24,1) both">
+        <path d="M0 244 C96 212 178 246 262 232 C346 218 404 190 492 206 C580 222 646 196 738 214 C830 232 906 202 1000 220 C1094 238 1150 232 1200 224 L1200 300 L0 300 Z" fill="var(--ridge2)" opacity=".78"></path>
+        <g clip-path="url(#clipMid)"><rect x="0" y="180" width="1200" height="120" fill="url(#firsMid)"></rect></g>
+      </g>
+      <g style="animation:ridgeup 1200ms 400ms cubic-bezier(.16,.8,.24,1) both">
+        <rect x="0" y="248" width="1200" height="26" fill="url(#crest)"></rect>
+        <rect x="0" y="272" width="1200" height="28" fill="var(--ridge3)"></rect>
+        <g fill="var(--ridge3)">
+          <rect x="186" y="256" width="7" height="20"></rect>
+          <circle cx="190" cy="244" r="21"></circle><circle cx="170" cy="252" r="15"></circle><circle cx="211" cy="251" r="14"></circle>
+          <rect x="1012" y="258" width="6" height="18"></rect>
+          <circle cx="1015" cy="248" r="17"></circle><circle cx="999" cy="255" r="12"></circle><circle cx="1031" cy="254" r="11"></circle>
+        </g>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<main>
+
+<section style="padding-top:52px">
+  <div data-reveal style="max-width:660px">
+    <div class="eyebrow">The premise</div>
+    <h2 style="margin:12px 0 0;font-variation-settings:'WONK' 1,'SOFT' 30;font-weight:600;font-size:clamp(26px,7vw,38px);line-height:1.1;letter-spacing:-.015em;text-wrap:pretty">Everyone goes to Julian for the apples. Go for the trees instead.</h2>
+    <p style="margin:16px 0 0;font-size:16.5px;line-height:1.62;color:var(--muted);text-wrap:pretty">The black oaks around Julian and Lake Cuyamaca &mdash; some of the oldest and largest in San Diego County &mdash; turn in a narrow band of early-to-mid November, and this reservation lands inside it. At 4,200 feet the color comes late and goes fast: gold leaves over grey-green lichen on near-black bark, for maybe two weeks. Paul and Morgan booked the weekend it happens without trying.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sechead" data-reveal>
+    <h2>The other two guests</h2>
+    <span>both on the booking</span>
+  </div>
+  <div class="grid g282">
+    <article class="card dog" data-reveal>
+      <div class="dogtop">
+        <div class="avwrap">
+          <img class="e" id="imgElwood" src="assets/elwood.png" alt="Elwood, a brown and white border collie">
+          <div id="ballSlot"></div>
+        </div>
+        <div style="min-width:0">
+          <h3>Elwood</h3>
+          <div class="breed">Border collie &middot; brown and white</div>
+          <p>Will work the fence line for two acres straight. Ball goes in the car.</p>
+        </div>
+      </div>
+      <div class="dogact">
+        <button class="dogbtn e" id="ballBtn">Throw the ball</button>
+        <span id="barkSlot"></span>
+      </div>
+    </article>
+
+    <article class="card dog" data-reveal>
+      <div class="dogtop">
+        <div class="avwrap">
+          <img class="l" id="imgEllie" src="assets/ellie.png" alt="Ellie, a golden retriever">
+          <div id="treatSlot"></div>
+        </div>
+        <div style="min-width:0">
+          <h3>Ellie</h3>
+          <div class="breed">Golden retriever &middot; fully retired</div>
+          <p>Three and a half flat miles is her limit and her preference. Towel is for her.</p>
+        </div>
+      </div>
+      <div class="dogact">
+        <button class="dogbtn l" id="treatBtn">Toss a treat</button>
+        <span id="gruntSlot"></span>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section style="padding-top:36px">
+  <div class="sechead" data-reveal><h2>The day shape</h2><span>2 nights</span></div>
+  <div class="grid g268" id="days"></div>
+</section>
+
+<section>
+  <div class="ref" data-reveal>
+    <div class="refhead">
+      <h2>Getting in</h2>
+      <span>Reference card</span>
+    </div>
+    <div class="refbody">
+      <div class="label">Courtney&rsquo;s directions &middot; coming up the 79</div>
+      <blockquote>Courtney sends turn-by-turn directions in the Airbnb app, and they are landmark-based rather than street-based &mdash; a sign, a fork, and a very large decorative chicken. They are not reproduced here.</blockquote>
+      <div class="shot">
+        <b>Screenshot this before you lose service.</b>
+        <span>Coverage in Kentwood-in-the-Pines is patchy and the last mile is navigated by poultry.</span>
+      </div>
+      <div class="refgrid">
+        <div>
+          <div class="label">Entry</div>
+          <div class="big">Keypad, self check-in</div>
+          <p>Door code and wifi password unlock in the Airbnb app 48 hours out &mdash; <span class="mono" style="color:var(--gold)">Wednesday Nov 4</span>. Nothing to do until then.</p>
+        </div>
+        <div>
+          <div class="label">Host</div>
+          <div class="big">Courtney &middot; Superhost</div>
+          <p class="s">4.99&#9733; &middot; Guest Favorite &middot; 3 bed / 2.5 bath &middot; sleeps 8 &middot; hot tub &middot; two fenced acres &middot; 5 min from downtown.</p>
+        </div>
+        <div>
+          <div class="label">On the booking</div>
+          <div class="big">2 guests, 2 pets</div>
+          <p class="s">Self check-in &middot; 8 guests maximum &middot; pets allowed. Both dogs are on the reservation.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow" data-reveal>Dates that matter</div>
+  <div class="dls" id="deadlines"></div>
+</section>
+
+<section style="padding-top:44px">
+  <div class="sechead" data-reveal>
+    <h2>What to do with the daylight</h2>
+    <span id="shownCount">12 of 12</span>
+  </div>
+  <div class="filters" id="filters" role="group" aria-label="Filter activities"></div>
+  <div class="grid g300" id="acts"></div>
+</section>
+
+<section style="padding-top:44px">
+  <div data-reveal style="max-width:660px">
+    <div class="eyebrow">Where to eat</div>
+    <h2 style="margin:12px 0 0;font-variation-settings:'WONK' 1,'SOFT' 30;font-weight:600;font-size:clamp(24px,6.4vw,34px);line-height:1.12;letter-spacing:-.015em">Julian just lost its anchor.</h2>
+    <p style="margin:14px 0 0;font-size:16.5px;line-height:1.6;color:var(--muted);text-wrap:pretty">Jeremy&rsquo;s on the Hill closed in February 2026 after seventeen years, and Wynola Pizza across Highway 78 went with it. What remains is genuinely short &mdash; four places worth the drive, and one of them is a deck over a lake.</p>
+  </div>
+
+  <div class="rlist" id="rests" data-reveal></div>
+
+  <div data-reveal style="margin-top:26px">
+    <h3 style="margin:0;font-variation-settings:'WONK' 1,'SOFT' 28;font-weight:600;font-size:clamp(20px,5.4vw,26px)">A chef at the farmhouse, and the arithmetic</h3>
+    <p style="max-width:660px;margin:10px 0 0;font-size:15.5px;line-height:1.58;color:var(--muted)">Airbnb lists 17 chef services bookable to this address for these dates. The per-guest headline prices are written for a table of six; the booking minimums are what you actually pay. For two people, five of the six below land at double the $100-a-head budget.</p>
+    <div class="grid g300" id="chefs"></div>
+  </div>
+
+  <div class="warnbox" data-reveal>
+    <h3>Verify by phone, not by search result</h3>
+    <p>Jeremy&rsquo;s on the Hill still shows as open across OpenTable, Facebook and every menu aggregator, seven months after it closed. Wynola Pizza is the same. In a town this size listings go stale for months &mdash; call, don&rsquo;t trust the page.</p>
+  </div>
+</section>
+
+<section style="padding-top:44px">
+  <div class="eyebrow" data-reveal>Four things the weekend turns on</div>
+  <div class="grid g220" id="figures"></div>
+</section>
+
+<section style="padding-top:44px;padding-bottom:96px">
+  <div class="sechead" data-reveal><h2>In the car</h2><span>Tap to check off</span></div>
+  <figure data-reveal>
+    <img id="imgCar" src="assets/both-car.png" alt="Elwood and Ellie in the back of the car">
+    <figcaption>Ninety minutes of this, each way.</figcaption>
+  </figure>
+  <div class="packgrid" id="pack"></div>
+</section>
+
+<footer>
+  <div class="in">
+    <div class="names">Paul &middot; Morgan &middot; Elwood, border collie &middot; Ellie, golden retriever</div>
+    <p class="meta">The Julian Farmhouse &middot; Julian, CA &middot; hosted by Courtney &middot; 2 guests and 2 pets</p>
+    <p class="fine">Hours, waitlists and dog policies change often in a town this size. Everything here was true when the trip was booked; call ahead on the Friday.</p>
+  </div>
+</footer>
+</main>
+
+<div class="tray" id="tray">
+  <div class="trayin">
+    <div class="c">
+      <div class="k" id="pickCount"></div>
+      <div class="n" id="pickNames"></div>
+    </div>
+    <button class="clr" id="clear">Clear</button>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+var TARGET = Date.parse("2026-11-07T00:00:00Z");
+var FILTERS = ["Everything","Dogs welcome","Easy on foot","Fall color","Call ahead"];
+var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+var ACTS = [
+ {id:"cuyamaca",title:"Lake Cuyamaca & Fletcher Island",rec:true,tags:["Dogs welcome","Easy on foot","Fall color"],
+  meta:"3.5 mi · flat · $10/car · ~20 min drive",tagline:"Saturday morning, 9:30",
+  body:"Enter at Chambers Park and walk the dike out to the pines. The only option that is easy, dog-legal and peak black-oak color all at once — leashed dogs the whole way."},
+ {id:"volcan",title:"Volcan Mountain",tags:["Dogs welcome","Fall color"],
+  meta:"5 mi · 1,300 ft · no water at trailhead",tagline:"The famous one",
+  body:"Dogs are allowed on the main double-track only. The Five Oaks single-track — the one with the best oaks — is hikers-only, so with Elwood and Ellie you get the fire road.",
+  warn:"Closes after ½\" of rain. Check before driving up."},
+ {id:"heise",title:"William Heise County Park",tags:["Dogs welcome","Easy on foot","Fall color"],
+  meta:"929 acres · 5 short trails",tagline:"Backup plan for Saturday",
+  body:"Oak, pine and cedar, with five short trails that all take leashed dogs. Less driving than Cuyamaca and shade the whole way."},
+ {id:"ysabel",title:"Santa Ysabel Preserve",tags:["Dogs welcome","Easy on foot"],
+  meta:"15 mi of trail · 8 AM–sunset · Hwy 79 staging",tagline:"Friday, 2:30",
+  body:"Leashed dogs on all of it, right on the way up. The dogs have been in the car ninety minutes — this fixes that, and it fills the hour before check-in."},
+ {id:"sanctuary",title:"Julian Animal Sanctuary",tags:["Call ahead"],
+  meta:"alpacas · llamas · emus · horses · ducks",tagline:"Saturday afternoon option",
+  body:"Biff, Bob, Skippy and Scooter the alpacas, plus cattle and emus. Cheap, strange and good.",
+  warn:"Hours and dog policy unconfirmed — call first."},
+ {id:"wolf",title:"California Wolf Center",tags:["Call ahead"],
+  meta:"15 min away · reservation only · no dogs",tagline:"Book now or skip it",
+  body:"Gray and Mexican gray wolves. There are no drop-ins and dogs cannot come, so this only works if it's booked before you leave San Diego."},
+ {id:"nickel",title:"Nickel Beer Company",tags:["Dogs welcome","Easy on foot"],
+  meta:"closest to the house",tagline:"Friday, 6:00",
+  body:"Dogs in the beer garden, not inside. The shortest possible drive from the driveway, which matters on the first night."},
+ {id:"downtown",title:"Downtown Julian",tags:["Easy on foot","Fall color"],
+  meta:"5 min away · 2–3 blocks · ~30 min",tagline:"Whenever",
+  body:"Two or three blocks and half an hour is the whole of it. The town trees turn on a different schedule than the woodland ones, so it's worth a look either way."},
+ {id:"pub",title:"Deck lunch at the Pub at Lake Cuyamaca",tags:["Dogs welcome","Easy on foot"],
+  meta:"Sat 9–6 · 5 min from the trailhead",tagline:"Saturday, 12:30",
+  body:"A covered deck straight over the water, leashed dogs welcome. Walk off the dike and eat — no second drive."},
+ {id:"chef",title:"Private chef at the farmhouse",tags:["Call ahead"],
+  meta:"$75 total with Chef Dayana",tagline:"Saturday, 6:30",
+  body:"The chef comes to the house, the dogs stay home with you, and nobody drives mountain roads after dark. See the arithmetic below before you book anyone else."},
+ {id:"cook",title:"Cook Saturday yourselves",tags:["Easy on foot"],
+  meta:"zero logistics",tagline:"The safe answer",
+  body:"Buy steaks in San Diego before leaving at one. Full kitchen, nothing to reserve, nothing that can be closed when you get there."},
+ {id:"tub",title:"The hot tub, right after dark",tags:["Dogs welcome","Easy on foot"],
+  meta:"sunset 4:45 · 4,200 ft · both nights",tagline:"The actual best thing on the list",
+  body:"Driest, clearest air of the year at elevation, and it is fully dark by six. Do it both nights; it is the reason to book a house instead of a room."}
+];
+
+var PACK = [
+ "Warm layer each — genuinely cold after dark",
+ "Towels for the hot tub, plus a second set for two wet dogs",
+ "Leashes — required on every trail up here",
+ "Water for the dogs; none at the Volcan trailhead",
+ "$10 cash for the Lake Cuyamaca gate",
+ "Screenshot the directions and download offline maps",
+ "Blanket for the back seat on the way home",
+ "Headlamp"
+];
+
+var DAYS = [
+ {date:"Friday Nov 6",title:"Get up the hill",note:"1 hr 40 min via CA-78 through Ramona.",items:[
+  {t:"1:00 PM",what:"Leave San Diego. Steaks in the cooler if you're cooking Saturday."},
+  {t:"2:30",what:"Leg-stretch at Santa Ysabel Preserve — leashed dogs, right off the 79."},
+  {t:"4:00",what:"Check in. Keypad. Dogs off-leash on two fenced acres."},
+  {t:"6:00",what:"Easy dinner, then the hot tub after dark."}]},
+ {date:"Saturday Nov 7",title:"The one big day",note:"Only ~10½ hours of daylight. Start early.",items:[
+  {t:"9:30 AM",what:"Drive to the hike — Chambers Park, Lake Cuyamaca."},
+  {t:"12:30",what:"Deck lunch at the Pub, five minutes from the trailhead."},
+  {t:"2:30",what:"Animals or downtown, depending on legs."},
+  {t:"4:45",what:"Sunset. Back at the house for it."},
+  {t:"6:30",what:"The good dinner."}]},
+ {date:"Sunday Nov 8",title:"Slow exit",note:"Checkout is firm at 11.",items:[
+  {t:"9:00 AM",what:"Coffee on the porch. Nothing scheduled."},
+  {t:"11:00",what:"Check out."},
+  {t:"11:30",what:"Lunch in town before the descent."},
+  {t:"2:00 PM",what:"Home."}]}
+];
+
+var DEADLINES = [
+ {when:"Oct 7 · 5:00 PM",what:"Last moment for free cancellation",color:"var(--lichen)"},
+ {when:"Oct 30 · 5:00 PM",what:"Last moment for a partial refund",color:"var(--muted)"},
+ {when:"Nov 4",what:"Door code and wifi appear in the app",color:"var(--gold)"},
+ {when:"Nov 6 · 4:00 PM",what:"Check-in",color:"var(--russet)"}
+];
+
+var RESTS = [
+ {name:"Orchard Hill",note:"The Supperclub at the boutique inn on Washington St — the closest thing Julian has to fine dining now.",hours:"Fri–Sat 8 AM–9 PM",dogs:"Assume none",book:"Book ahead",phone:"760-270-2596"},
+ {name:"The Pub at Lake Cuyamaca",note:"15027 CA-79. Covered deck over the water, five minutes from the trailhead.",hours:"Sat–Sun 9–6 · Fri 11–6",dogs:"Yes, covered deck",book:"Walk in",phone:"760-765-0077"},
+ {name:"Romano's",note:"Sicilian on B St since 1983.",hours:"Fri–Sat 11–9",dogs:"Four patio tables",book:"Waitlist only, call same day",phone:"760-765-1003"},
+ {name:"Quecho",note:"Elevated Mexican at B & 3rd. Closed Wednesdays.",hours:"Fri–Sat 11–8 · Sun 11–7",dogs:"Patio, ask",book:"No reservations, QR waitlist",phone:"760-765-1560"}
+];
+
+var CHEFS = [
+ {name:"In-Home Dining with Chef Dayana",rating:"4.92 (13)",listed:"$75 per group",real:"$75 total",win:true,verdict:"Priced per group with no stated minimum — the only one inside the $100-a-head budget, at a third of it."},
+ {name:"Shef Steff's",rating:"5.0 (6)",listed:"$95/guest · $380 min",real:"$190 / person",verdict:"Minimum is written for four."},
+ {name:"Harvest to Table",rating:"5.0 (18)",listed:"$85/guest · $500 min",real:"$250 / person",verdict:"$500 floor regardless of two guests."},
+ {name:"Chef Benjamin",rating:"5.0 (21)",listed:"$50/guest · $500 min",real:"$250 / person",verdict:"Cheapest headline, same $500 floor."},
+ {name:"Chef Fabio (Italian)",rating:"5.0 (32)",listed:"$125/guest · $750 min",real:"$375 / person",verdict:"Nearly four times the budget for two."},
+ {name:"Four Course Michelin Star",rating:"5.0 (8)",listed:"$300/guest · $600 min",real:"$300 / person",verdict:"Triple budget. A different trip's dinner."}
+];
+
+var FIGURES = [
+ {big:"4:45 PM",label:"Sunset Saturday",body:"Only about 10½ hours of daylight. Sunset is genuinely this early — start the hike by 9:30 or you finish it in the dark."},
+ {big:"69° / 50°F",label:"High and low",body:"Pleasant by day, genuinely cold after dark at 4,200 feet. November is the first month it can snow up here."},
+ {big:"1h40",label:"Drive each way",body:"CA-78 through Ramona, both directions. Ninety minutes of it is dogs in the back seat."},
+ {big:"51%",label:"Humidity",body:"Driest, clearest month of the year — rain on only about four days, but half an inch closes Volcan."}
+];
+
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function $(id){ return document.getElementById(id); }
+
+/* ---- state ---- */
+var picks = {}, packed = {}, theme = "system", filter = "Everything";
+try{
+  picks = JSON.parse(localStorage.getItem("oaks.picks")||"{}")||{};
+  packed = JSON.parse(localStorage.getItem("oaks.packed")||"{}")||{};
+  theme = localStorage.getItem("oaks.theme")||"system";
+  if(theme==="light"||theme==="dark") document.documentElement.setAttribute("data-theme",theme);
+}catch(e){}
+function save(k,v){ try{ localStorage.setItem("oaks."+k, JSON.stringify(v)); }catch(e){} }
+
+/* ---- theme ---- */
+var themeBtn = $("theme");
+function themeLabel(){ return theme==="system"?"Auto":(theme==="light"?"Light":"Dark"); }
+themeBtn.textContent = themeLabel();
+themeBtn.addEventListener("click", function(){
+  var order = ["system","light","dark"];
+  theme = order[(order.indexOf(theme)+1)%3];
+  if(theme==="system") document.documentElement.removeAttribute("data-theme");
+  else document.documentElement.setAttribute("data-theme", theme);
+  try{ localStorage.setItem("oaks.theme", theme); }catch(e){}
+  themeBtn.textContent = themeLabel();
+  leafColors();
+});
+
+/* ---- countdown ---- */
+function pad(v){ return String(v).padStart(2,"0"); }
+function tick(){
+  var left = Math.max(0, TARGET - Date.now());
+  var s = Math.floor(left/1000);
+  $("cd").textContent = String(Math.floor(s/86400));
+  $("ch").textContent = pad(Math.floor(s/3600)%24);
+  $("cm").textContent = pad(Math.floor(s/60)%60);
+  $("cs").textContent = pad(s%60);
+}
+tick(); setInterval(tick,1000);
+
+/* ---- static lists ---- */
+$("days").innerHTML = DAYS.map(function(d){
+  return '<article class="card day" data-reveal><div class="date">'+esc(d.date)+'</div>'+
+  '<h3>'+esc(d.title)+'</h3><p class="note">'+esc(d.note)+'</p><ul>'+
+  d.items.map(function(r){ return '<li><span class="t">'+esc(r.t)+'</span><span class="w">'+esc(r.what)+'</span></li>'; }).join("")+
+  '</ul></article>';
+}).join("");
+
+$("deadlines").innerHTML = DEADLINES.map(function(d){
+  return '<div data-reveal><b style="color:'+d.color+'">'+esc(d.when)+'</b><span>'+esc(d.what)+'</span></div>';
+}).join("");
+
+$("rests").innerHTML = RESTS.map(function(r){
+  return '<div class="rrow"><div><div class="rname">'+esc(r.name)+'</div><div class="rnote">'+esc(r.note)+'</div></div>'+
+  '<div><div class="rk">Hours</div><div class="rv m">'+esc(r.hours)+'</div></div>'+
+  '<div><div class="rk">Dogs</div><div class="rv d">'+esc(r.dogs)+'</div></div>'+
+  '<div><div class="rk">Booking</div><div class="rv b">'+esc(r.book)+'</div><div class="rph">'+esc(r.phone)+'</div></div></div>';
+}).join("");
+
+$("chefs").innerHTML = CHEFS.map(function(c){
+  return '<div class="chef'+(c.win?" win":"")+'" data-reveal><div class="cheftop"><div class="chefname">'+esc(c.name)+'</div>'+
+  '<div class="chefrate">'+esc(c.rating)+'</div></div>'+
+  '<div class="chefnums"><div><div class="rk">Listed</div><div class="v">'+esc(c.listed)+'</div></div>'+
+  '<div class="r"><div class="rk">Real cost for 2</div><div class="real">'+esc(c.real)+'</div></div></div>'+
+  '<div class="chefv">'+esc(c.verdict)+'</div></div>';
+}).join("");
+
+$("figures").innerHTML = FIGURES.map(function(f){
+  return '<div class="fig" data-reveal><div class="big">'+esc(f.big)+'</div><div class="lab">'+esc(f.label)+'</div><p>'+esc(f.body)+'</p></div>';
+}).join("");
+
+/* ---- filters + activities ---- */
+$("filters").innerHTML = FILTERS.map(function(f){
+  return '<button class="fchip" data-f="'+esc(f)+'" aria-pressed="'+(f===filter)+'">'+esc(f)+'</button>';
+}).join("");
+
+function renderActs(){
+  var shown = ACTS.filter(function(a){ return filter==="Everything" || a.tags.indexOf(filter)>-1; });
+  $("shownCount").textContent = shown.length+" of 12";
+  $("acts").innerHTML = shown.map(function(a){
+    var on = !!picks[a.id];
+    return '<article class="act'+(a.rec?" rec":"")+(on?" on":"")+'" data-reveal>'+
+    '<div class="acttop"><h3>'+esc(a.title)+'</h3>'+(a.rec?'<span class="tagpick">The pick</span>':'')+'</div>'+
+    '<div class="meta">'+esc(a.meta)+'</div>'+
+    '<p class="body">'+esc(a.body)+'</p>'+
+    (a.warn?'<div class="warn">'+esc(a.warn)+'</div>':'')+
+    '<div class="actfoot"><span class="tl">'+esc(a.tagline)+'</span>'+
+    '<button class="addbtn" data-id="'+esc(a.id)+'" aria-pressed="'+on+'">'+(on?"Added ✓":"Add")+'</button></div></article>';
+  }).join("");
+  wireReveal($("acts"));
+}
+$("filters").addEventListener("click", function(e){
+  var b = e.target.closest(".fchip"); if(!b) return;
+  filter = b.dataset.f;
+  Array.prototype.forEach.call($("filters").children, function(c){ c.setAttribute("aria-pressed", String(c.dataset.f===filter)); });
+  renderActs();
+});
+$("acts").addEventListener("click", function(e){
+  var b = e.target.closest(".addbtn"); if(!b) return;
+  var id = b.dataset.id;
+  var a = ACTS.filter(function(x){ return x.id===id; })[0];
+  if(picks[id]) delete picks[id]; else picks[id] = a.title;
+  save("picks",picks); renderActs(); renderTray();
+});
+
+/* ---- tray ---- */
+function renderTray(){
+  var names = Object.keys(picks).map(function(k){ return picks[k]; });
+  $("tray").classList.toggle("up", names.length>0);
+  $("pickCount").textContent = names.length + (names.length===1?" thing on the list":" things on the list");
+  $("pickNames").textContent = names.join(" · ");
+}
+$("clear").addEventListener("click", function(){ picks = {}; save("picks",picks); renderActs(); renderTray(); });
+
+/* ---- packing ---- */
+function renderPack(){
+  $("pack").innerHTML = PACK.map(function(t,i){
+    var on = !!packed[i];
+    return '<button class="pk'+(on?" on":"")+'" data-i="'+i+'" aria-pressed="'+on+'"><span class="box">'+(on?"✓":"")+'</span><span>'+esc(t)+'</span></button>';
+  }).join("");
+}
+$("pack").addEventListener("click", function(e){
+  var b = e.target.closest(".pk"); if(!b) return;
+  var i = b.dataset.i;
+  if(packed[i]) delete packed[i]; else packed[i]=true;
+  save("packed",packed); renderPack();
+});
+
+renderActs(); renderTray(); renderPack();
+
+/* ---- dog interactions ---- */
+var ac = null;
+function audio(){
+  var AC = window.AudioContext || window.webkitAudioContext;
+  if(!AC) return null;
+  if(!ac) ac = new AC();
+  if(ac.state==="suspended") ac.resume();
+  return ac;
+}
+var barkT, gruntT;
+function bark(){
+  var a = audio();
+  if(a){
+    var lp = a.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=2200; lp.connect(a.destination);
+    [[0,620,190,.26],[.13,480,150,.2]].forEach(function(p){
+      var t=a.currentTime+p[0], o=a.createOscillator(), g=a.createGain();
+      o.type="triangle";
+      o.frequency.setValueAtTime(p[1],t);
+      o.frequency.exponentialRampToValueAtTime(p[2],t+.1);
+      g.gain.setValueAtTime(.0001,t);
+      g.gain.exponentialRampToValueAtTime(p[3],t+.012);
+      g.gain.exponentialRampToValueAtTime(.0001,t+.12);
+      o.connect(g); g.connect(lp); o.start(t); o.stop(t+.16);
+    });
+  }
+  clearTimeout(barkT);
+  $("ballSlot").innerHTML = '<div class="ball"></div>';
+  $("barkSlot").innerHTML = '<span class="say e">Bork!</span>';
+  if(!reduced) $("imgElwood").style.animation = "nudge 520ms 560ms cubic-bezier(.3,.7,.4,1) both";
+  barkT = setTimeout(function(){
+    $("ballSlot").innerHTML=""; $("barkSlot").innerHTML=""; $("imgElwood").style.animation="none";
+  },1600);
+}
+function grunt(){
+  var a = audio();
+  if(a){
+    var t0 = a.currentTime+.38;
+    var lp = a.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=420; lp.connect(a.destination);
+    [[150,78,.2],[76,44,.12]].forEach(function(p){
+      var o=a.createOscillator(), g=a.createGain();
+      o.type="sine";
+      o.frequency.setValueAtTime(p[0],t0);
+      o.frequency.exponentialRampToValueAtTime(p[1],t0+.32);
+      g.gain.setValueAtTime(.0001,t0);
+      g.gain.linearRampToValueAtTime(p[2],t0+.06);
+      g.gain.exponentialRampToValueAtTime(.0001,t0+.36);
+      o.connect(g); g.connect(lp); o.start(t0); o.stop(t0+.4);
+    });
+  }
+  clearTimeout(gruntT);
+  $("treatSlot").innerHTML = '<div class="treat"></div>';
+  $("gruntSlot").innerHTML = '<span class="say l">Hrrmf.</span>';
+  if(!reduced) $("imgEllie").style.animation = "nudge 700ms 600ms cubic-bezier(.3,.7,.4,1) both";
+  gruntT = setTimeout(function(){
+    $("treatSlot").innerHTML=""; $("gruntSlot").innerHTML=""; $("imgEllie").style.animation="none";
+  },1600);
+}
+$("ballBtn").addEventListener("click", bark);
+$("treatBtn").addEventListener("click", grunt);
+
+/* ---- reveal ---- */
+var io = null;
+if(!reduced && "IntersectionObserver" in window){
+  io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){ en.target.style.opacity="1"; en.target.style.transform="none"; io.unobserve(en.target); }
+    });
+  }, { rootMargin:"0px 0px -8% 0px" });
+}
+function wireReveal(root){
+  if(!io) return;
+  var els = Array.prototype.slice.call((root||document).querySelectorAll("[data-reveal]"));
+  els.forEach(function(el,i){
+    if(el.__rev) return; el.__rev = true;
+    el.style.opacity="0"; el.style.transform="translateY(16px)";
+    var d = (i%4)*70;
+    el.style.transition = "opacity 620ms cubic-bezier(.16,.8,.24,1) "+d+"ms, transform 620ms cubic-bezier(.16,.8,.24,1) "+d+"ms";
+    io.observe(el);
+  });
+}
+wireReveal(document);
+
+/* ---- leaves ---- */
+var cv = $("leaves"), ctx = cv.getContext("2d");
+var cols = ["#B37A12","#8E3B1B","#5E6B49"];
+function leafColors(){
+  var s = getComputedStyle(document.documentElement);
+  cols = [s.getPropertyValue("--gold").trim()||"#B37A12", s.getPropertyValue("--russet").trim()||"#8E3B1B", s.getPropertyValue("--lichen").trim()||"#5E6B49"];
+  leaves.forEach(function(l,i){ l.c = cols[i%3]; });
+}
+var w=0,h=0,leaves=[],dpr=Math.min(window.devicePixelRatio||1,2),raf=null;
+function mk(){
+  return { x:Math.random()*w, y:Math.random()*h, s:9+Math.random()*16, vy:6+Math.random()*14,
+    drift:8+Math.random()*22, ph:Math.random()*Math.PI*2, rot:Math.random()*Math.PI,
+    vr:(Math.random()-.5)*.5, c:cols[(Math.random()*3)|0], a:.1+Math.random()*.14 };
+}
+function drawLeaf(l){
+  ctx.save(); ctx.translate(l.x,l.y); ctx.rotate(l.rot);
+  ctx.globalAlpha=l.a; ctx.fillStyle=l.c;
+  ctx.beginPath(); ctx.moveTo(0,-l.s);
+  ctx.bezierCurveTo(l.s*.78,-l.s*.42,l.s*.55,l.s*.5,0,l.s);
+  ctx.bezierCurveTo(-l.s*.55,l.s*.5,-l.s*.78,-l.s*.42,0,-l.s);
+  ctx.fill(); ctx.restore();
+}
+function size(){
+  var nw = cv.clientWidth||window.innerWidth, nh = cv.clientHeight||window.innerHeight;
+  if(!nw||!nh) return;
+  var first = !w, sx = w ? nw/w : 1;
+  w=nw; h=nh;
+  cv.width=Math.round(w*dpr); cv.height=Math.round(h*dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  var n = w<600 ? 14 : 24;
+  if(first) leaves = Array.from({length:n},mk);
+  else { leaves.forEach(function(l){ l.x*=sx; }); while(leaves.length<n) leaves.push(mk()); leaves.length=n; }
+  if(reduced){ ctx.clearRect(0,0,w,h); leaves.forEach(drawLeaf); }
+}
+window.addEventListener("resize", size);
+if(window.ResizeObserver) new ResizeObserver(size).observe(cv);
+var tries=0;
+(function settle(){ if(w||tries++>60) return; size(); requestAnimationFrame(settle); })();
+size();
+if(!reduced){
+  var last = performance.now();
+  (function tickLeaves(t){
+    var dt = Math.min((t-last)/1000,.05); last=t;
+    if(w){
+      ctx.clearRect(0,0,w,h);
+      leaves.forEach(function(l){
+        l.y += l.vy*dt; l.ph += dt*.8; l.x += Math.sin(l.ph)*l.drift*dt; l.rot += l.vr*dt;
+        if(l.y-l.s>h){ l.y=-l.s*2; l.x=Math.random()*w; }
+        if(l.x<-40) l.x=w+30; else if(l.x>w+40) l.x=-30;
+        drawLeaf(l);
+      });
+    }
+    raf = requestAnimationFrame(tickLeaves);
+  })(performance.now());
+}
+document.addEventListener("visibilitychange", function(){
+  if(document.hidden){ if(raf){ cancelAnimationFrame(raf); raf=null; } }
+  else if(!reduced && !raf){
+    var last2 = performance.now();
+    (function again(t){
+      var dt=Math.min((t-last2)/1000,.05); last2=t;
+      if(w){ ctx.clearRect(0,0,w,h); leaves.forEach(function(l){
+        l.y+=l.vy*dt; l.ph+=dt*.8; l.x+=Math.sin(l.ph)*l.drift*dt; l.rot+=l.vr*dt;
+        if(l.y-l.s>h){ l.y=-l.s*2; l.x=Math.random()*w; }
+        if(l.x<-40) l.x=w+30; else if(l.x>w+40) l.x=-30;
+        drawLeaf(l); }); }
+      raf = requestAnimationFrame(again);
+    })(performance.now());
+  }
+});
+})();
+</script>
+
+</body>
+</html>
